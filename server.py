@@ -1,9 +1,5 @@
 import os
 import sys
-# Fix for windows embedded environment
-file_dir = os.path.dirname(__file__)
-sys.path.append(file_dir)
-
 import random
 import asyncio
 import coloredlogs
@@ -25,7 +21,6 @@ from utils.state import ServerConfig
 
 from utils.cli import parse_args
 
-
 dependencies = [
     Depends(log_request),
 ]
@@ -36,6 +31,12 @@ coloredlogs.install(level=args.logLevel.upper())
 logger = logging.getLogger(__name__)
 logger.debug(f"Current Log Level: {args.logLevel}")
 
+# 解析命令行参数，指定不同的端口号
+arg_parser = ArgumentParser()
+arg_parser.add_argument("--port", type=int, default=5000, help="Port number for the server to listen on")
+args = arg_parser.parse_args()
+
+ServerConfig.port = args.port
 
 addr = args.listen.split(":")
 
